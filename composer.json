@@ -5,15 +5,17 @@
     "keywords": [
         "axleus"
     ],
+    "homepage": "https://github.com/orgs/axleus/discussions",
+    "support": {
+        "issues": "https://github.com/axleus/axleus-debug/issues",
+        "chat": "https://discord.gg/9TxQ74EPsG"
+    },
     "authors": [
         {
             "name": "Joey Smith",
             "email": "jsmith@webinertia.net",
-            "homepage": "https://github.com/axleus/debug/discussions"
         }
     ],
-    "suggest": {
-    },
     "require": {
         "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
         "axleus/axleus-core": "dev-master",
