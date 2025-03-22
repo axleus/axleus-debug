@@ -91,10 +91,10 @@ class Debug
      *
      * @param  mixed  $var   The variable to dump.
      * @param  string $label OPTIONAL Label to prepend to output.
-     * @param  bool   $echo  OPTIONAL Echo output if true.
+     * @param  bool   $outputBuffered  OPTIONAL Echo output if true.
      * @return string
      */
-    public static function dump($var, $label = '', $showFullPath = false, $echo = true)
+    public static function dump($var, $label = '', $showFullPath = false, bool $outputBuffered = true)
     {
         if (strlen($label) >= 1) {
             $label = $label . PHP_EOL;
@@ -132,7 +132,7 @@ class Debug
                     . '</pre>';
         }
 
-        if ($echo) {
+        if ($outputBuffered) {
             echo $output;
         }
         return $output;
@@ -148,22 +148,27 @@ class Debug
         return '<pre> ' . $name . ' ' . $elapsed . ' ms</pre>';
     }
 
-    public static function dbDebug(AdapterInterface&Adapter $adapter)
+    public static function dbDebug(AdapterInterface $adapter, bool $outputBuffered = true): string
     {
         /** @var Profiler */
+        $output = '';
         $profiler = $adapter->getProfiler();
         if (! $profiler instanceof Profiler) {
-            throw new RuntimeException(Adapter::class . ' Must have a composed ' . Profiler::class . ' instance before calling dbDebug.');
+            throw new RuntimeException(AdapterInterface::class . ' Must have a composed ' . Profiler::class . ' instance before calling dbDebug.');
         }
         foreach ($profiler->getProfiles() as $profile) {
             ['sql' => $sql, 'elapse' => $elapse] = $profile;
-            static::dump(
+
+            $output .= static::dump(
                 [
                     'sql' => $sql,
                     'elapsed-time' => number_format($elapse * 1000, 5, '.', "\u{202f}") . ' ms',
                 ],
-                'Query Profile:'
+                'Query Profile:',
+                null,
+                $outputBuffered
             );
         }
+        return $output;
     }
 }
